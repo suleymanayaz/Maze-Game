@@ -23,6 +23,7 @@ public class Oyun {
     private Node[][] grid;
     private Point start,finish;
     Board board;
+    int counter = 0;
     public Oyun(int lines,int cols){
         this.lines = lines;
         this.cols=cols;
@@ -30,27 +31,20 @@ public class Oyun {
         this.start = new Point(0,0);
         this.finish = new Point(0,0);
         initGrid(); 
-        valueInitGrid();
     }
 
     private void initGrid(){
+       
         for(int i = 0;i<lines;i++){
                 for(int j =0;j<cols;j++ ){
                     Node n = new Node(i,j);
                     grid[i][j]= n;
+                    grid[i][j].setSira(counter);
+                    counter++;
                 }
         }
     }
-    public void valueInitGrid(){
-        for(int i=0;i<lines;i++){
-            for(int j=0;j<cols;j++){
-                int rand =((int)(Math.random()*39));
-                Node n = new Node(i,j);
-                n.setValue(rand);
-                grid[i][j] = n;
-            }
-        }
-    }
+   
     
    
     

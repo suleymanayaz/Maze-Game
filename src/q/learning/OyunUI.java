@@ -12,6 +12,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -30,6 +31,12 @@ public class OyunUI extends JPanel implements MouseListener{
     public Color dbg;
     JLabel start,finish,value;
     Board board;
+    double [][] Q = new double[2][3];
+    int [][] R = new int[2][3];
+    final double alpha = 0.1;
+    final double gamma = 0.9;
+    int [][] actions = new int [6][];
+    int indexA = 0;
     public OyunUI(Oyun oyun){
         this.oyun = oyun;
         gbl = new GridBagLayout();
@@ -90,7 +97,7 @@ public class OyunUI extends JPanel implements MouseListener{
                 gbc.gridy = i;
                 setBackground(dbg);
                 value = new JLabel();
-                value.setText(Integer.toString(oyun.getGrid()[i][j].getValue()));
+                value.setText(Integer.toString(oyun.getGrid()[i][j].getSira()));
                 grid[i][j].add(value);
                 grid[i][j].addMouseListener(this);
                 grid[i][j].setBackground(dbg);
@@ -116,27 +123,22 @@ public class OyunUI extends JPanel implements MouseListener{
             }
         } 
     }
-
       
+      public void cizme(ArrayList<Point> pointArr){
+           for(Point p : pointArr){
+              
+                grid[p.x][p.y].setBackground(Color.yellow);
+                this.paintAll(getGraphics());
+                  try {
+                 Thread.sleep(100); // delay
+                    } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }  
+                grid[p.x][p.y].setBackground(dbg);
+            }
+      }
       
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+ 
       
     @Override
     public void mouseClicked(MouseEvent e) {

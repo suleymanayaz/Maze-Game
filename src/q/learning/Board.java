@@ -37,7 +37,7 @@ import javax.swing.JTextField;
  */
 public class Board  extends JFrame implements ActionListener{
     
-    int boardx = 50,boardy=50;
+    int boardx = 3,boardy=3;
     JPanel oyun,settings,generate,sonuc,sonuclar,oyuncular;
     JButton start;
     JTextField startLoc,finishLoc;
@@ -137,7 +137,7 @@ public class Board  extends JFrame implements ActionListener{
             int finishLocX = Integer.parseInt(startLocString[0]);
             int finishLocY = Integer.parseInt(startLocString[1]);
             oyunBoard.setStart(new Point(startLocX,startLocY));
-            oyunBoard.setFinish(new Point(startLocX,startLocY));
+            oyunBoard.setFinish(new Point(finishLocX,finishLocY));
             JLabel start = new JLabel();
             start.setText("A");
             oyunUI.grid[startLocX][startLocY].setBackground(Color.blue);
@@ -147,6 +147,11 @@ public class Board  extends JFrame implements ActionListener{
             oyunUI.grid[finishLocX][finishLocY].setBackground(Color.green);
             oyunUI.grid[finishLocX][finishLocY].add(finish);
             fileWrite();
+            Q_Learning q = new Q_Learning(oyunBoard);
+            q.run();
+            q.printResult(); 
+            ArrayList <Point> pointAr = q.showPolicy();
+            oyunUI.cizme(q.pointler);
         }
         
         
