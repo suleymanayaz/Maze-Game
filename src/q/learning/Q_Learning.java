@@ -22,12 +22,13 @@ public class Q_Learning {
    double [][] Q;
    int stateFinish;
    ArrayList<Point> pointler = new ArrayList();
+   
     public Q_Learning(Oyun oyun){
       this.oyun = oyun;
       this.statesCount=createSira();
       komsuBul();
       init();
-     printResult();
+      printResult();
              
 
     }
@@ -89,7 +90,7 @@ public class Q_Learning {
     
     public void run(){
         Random rand = new Random();
-        for(int i = 0;i<73;i++){
+        for(int i = 0;i<1;i++){
             int state = oyun.getGrid()[oyun.getStart().x][oyun.getStart().y].getSira();        
             while(state!=stateFinish){
                 Point p = findGrid(state);
@@ -108,8 +109,6 @@ public class Q_Learning {
                 setQ(state,action,value);         
                 state = nextState;
                 }
-               
-
             }
         }
        
@@ -155,9 +154,11 @@ public class Q_Learning {
     for(int i =0 ; i< temp.size();i++){
           int nextState = temp.get(i).getSira();
           double value  = Q[state][nextState];
-          if(value > maxValue)
-              maxValue = value;
+          if(value > maxValue){
+                maxValue = value;
           policyGotoState = nextState;
+          }
+            
     }
     return policyGotoState;
     }
@@ -179,12 +180,15 @@ public class Q_Learning {
         ArrayList<Point> pointAr = new ArrayList();
         for(int i = 0; i< oyun.getLines();i++){
             for(int j = 0; j< oyun.getCols();j++){
-                int from = oyun.getGrid()[i][j].getSira();
+                if(!oyun.getGrid()[i][j].isDuvar()){
+                             int from = oyun.getGrid()[i][j].getSira();
                 int to = policy(from);
                 Point p = findGrid(to);
                 pointAr.add(oyun.getGrid()[i][j].p);
                 pointAr.add(p);
-                System.out.println("From :"+oyun.getGrid()[i][j].p+"GO TO :"+oyun.getGrid()[p.x][p.y].p);
+                System.out.println("From :"+oyun.getGrid()[i][j].getSira()+" --> GO TO :"+oyun.getGrid()[p.x][p.y].getSira());
+                }
+       
             }
         }
         return pointAr;

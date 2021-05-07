@@ -126,8 +126,26 @@ public class OyunUI extends JPanel implements MouseListener{
       
       public void cizme(ArrayList<Point> pointArr){
            for(Point p : pointArr){
-              
-                grid[p.x][p.y].setBackground(Color.yellow);
+               if(oyun.getStart().equals(p)){
+                   grid[p.x][p.y].setBackground(Color.yellow);
+                   this.paintAll(getGraphics());
+                     try {
+                 Thread.sleep(100); // delay
+                    } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                  grid[p.x][p.y].setBackground(Color.blue);    
+               }else if ( oyun.getFinish().equals(p)){
+                   grid[p.x][p.y].setBackground(Color.yellow);
+                   this.paintAll(getGraphics());
+                     try {
+                 Thread.sleep(100); // delay
+                    } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                  grid[p.x][p.y].setBackground(Color.GREEN);
+               }else{
+                     grid[p.x][p.y].setBackground(Color.yellow);
                 this.paintAll(getGraphics());
                   try {
                  Thread.sleep(100); // delay
@@ -135,6 +153,8 @@ public class OyunUI extends JPanel implements MouseListener{
                     e.printStackTrace();
                 }  
                 grid[p.x][p.y].setBackground(dbg);
+               }
+              
             }
       }
       

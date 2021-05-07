@@ -133,7 +133,11 @@ public class Board  extends JFrame implements ActionListener{
         if(giris){
             Point startP = findGrid(Integer.parseInt(startLocString));
             Point finishP = findGrid(Integer.parseInt(finishLocString));
-            int startLocX = startP.x;
+            if(startP == null ||finishP == null){
+                 Frame frameForPopUp = new JFrame();
+                JOptionPane.showMessageDialog(frameForPopUp,"Start  or finish input invalid  location!!");
+            }else{
+                 int startLocX = startP.x;
             int startLocY = startP.y;
             int finishLocX = finishP.x;
             int finishLocY = finishP.y;
@@ -153,6 +157,8 @@ public class Board  extends JFrame implements ActionListener{
             q.printResult(); 
             ArrayList <Point> pointAr = q.showPolicy();
             oyunUI.cizme(q.pointler);
+            }
+           
         }
         
         
