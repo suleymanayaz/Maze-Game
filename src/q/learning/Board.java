@@ -74,7 +74,7 @@ public class Board  extends JFrame implements ActionListener{
         generate.setLayout(new FlowLayout());
         start = new JButton("Start");
         start.addActionListener(this);
-        String string1 = "X,Y";
+        String string1 = "Number";
         startLoc =  new JTextField(string1,5);
         startLocLab = new JLabel("Start Location :  ");
         finishLoc = new JTextField(string1,5);
@@ -122,20 +122,21 @@ public class Board  extends JFrame implements ActionListener{
         System.out.println(startLoc.getText());
         System.out.println(finishLoc.getText());
         boolean giris = true;
-        String [] startLocString = startLoc.getText().split(",",2);
-        for(String s : startLocString){
-            if(s.equals("X") || s.equals("Y")){
+        String startLocString = startLoc.getText();
+        String finishLocString = finishLoc.getText();
+            if(startLocString.equals("Number") || finishLocString.equals("Number") || startLocString.equals("") || finishLocString.equals("")){
                 Frame frameForPopUp = new JFrame();
                 JOptionPane.showMessageDialog(frameForPopUp,"Start  or finish input invalid  location!!");
                 giris = false; 
             }
-        }
+        
         if(giris){
-            int startLocX = Integer.parseInt(startLocString[0]);
-            int startLocY = Integer.parseInt(startLocString[1]);
-            startLocString = finishLoc.getText().split(",",2);
-            int finishLocX = Integer.parseInt(startLocString[0]);
-            int finishLocY = Integer.parseInt(startLocString[1]);
+            Point startP = findGrid(Integer.parseInt(startLocString));
+            Point finishP = findGrid(Integer.parseInt(finishLocString));
+            int startLocX = startP.x;
+            int startLocY = startP.y;
+            int finishLocX = finishP.x;
+            int finishLocY = finishP.y;
             oyunBoard.setStart(new Point(startLocX,startLocY));
             oyunBoard.setFinish(new Point(finishLocX,finishLocY));
             JLabel start = new JLabel();
@@ -156,6 +157,17 @@ public class Board  extends JFrame implements ActionListener{
         
         
         
+    }
+    public Point findGrid(int s){
+        Point p = null;
+        for(int i=0;i<oyunBoard.getLines();i++){
+            for(int j=0;j<oyunBoard.getCols();j++){
+                if(oyunBoard.getGrid()[i][j].getSira() == s){
+                    p = new Point(i,j);
+                }
+            }
+        }
+        return p ;
     }
 
  

@@ -15,7 +15,7 @@ public class Q_Learning {
    final DecimalFormat df = new DecimalFormat("#.##");
    Oyun oyun;
    OyunUI oyunui;
-   final double alpha = 0.1;
+   final double alpha = 0.8;
    final double gamma = 0.9;
    int statesCount;
    int [][] R;
@@ -27,7 +27,8 @@ public class Q_Learning {
       this.statesCount=createSira();
       komsuBul();
       init();
-    
+     printResult();
+             
 
     }
     
@@ -47,9 +48,7 @@ public class Q_Learning {
         int counter = 0;
         for(int i=0;i<this.oyun.getLines();i++){
             for(int j=0;j<this.oyun.getCols();j++){
-                oyun.getGrid()[i][j].setSira(counter);
-                counter++;
-          
+                counter++; 
             }
         }
         return counter;
@@ -70,6 +69,7 @@ public class Q_Learning {
                 if(j+1<oyun.getCols() && oyun.getGrid()[i][j+1].isDuvar() == false){
                      oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i][j+1]);
                 }
+                /*
                 if( i-1>=0 && j+1<oyun.getCols() && oyun.getGrid()[i-1][j+1].isDuvar() == false){
                     oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i-1][j+1]);
                 }
@@ -82,14 +82,14 @@ public class Q_Learning {
                 if(i+1<oyun.getLines() && j-1>=0 && oyun.getGrid()[i+1][j-1].isDuvar() == false){
                     oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i+1][j-1]);
                 }
-              
+              */
             }
         }
     }
     
     public void run(){
         Random rand = new Random();
-        for(int i = 0;i<10;i++){
+        for(int i = 0;i<73;i++){
             int state = oyun.getGrid()[oyun.getStart().x][oyun.getStart().y].getSira();        
             while(state!=stateFinish){
                 Point p = findGrid(state);
@@ -166,7 +166,7 @@ public class Q_Learning {
     void printResult() {
         System.out.println("Print result");
         for (int i = 0; i < Q.length; i++) {
-            System.out.print("out from " + "A" + ":  ");
+            System.out.print("out from " + i + ":  ");
             for (int j = 0; j < Q[i].length; j++) {
                 System.out.print(df.format(Q[i][j]) + " ");
             }
