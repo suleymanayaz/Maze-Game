@@ -19,6 +19,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.stage.Stage;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -39,13 +45,14 @@ public class Board  extends JFrame implements ActionListener{
     
     int boardx = 3,boardy=3;
     JPanel oyun,settings,generate,sonuc,sonuclar,oyuncular;
-    JButton start;
+    JButton start,reset,grafik1,grafik2;
     JTextField startLoc,finishLoc;
     JLabel startLocLab,finishLocLab;
     Oyun oyunBoard;
     OyunUI oyunUI;
     File file = new File("C:\\Users\\AYAZ\\Documents\\NetBeansProjects\\Q-Learning\\engel.txt");
-
+    ArrayList <ArrayList<Integer> > gecici1;
+    ArrayList <ArrayList<Double>> gecici2;
     public static void main(String []args){
         new Board();
     }
@@ -79,7 +86,12 @@ public class Board  extends JFrame implements ActionListener{
         startLocLab = new JLabel("Start Location :  ");
         finishLoc = new JTextField(string1,5);
         finishLocLab = new JLabel("Finish Location : ");
-        
+        reset = new JButton("Reset");
+        reset.addActionListener(this);
+        grafik1 = new JButton("Grafik1");
+        grafik1.addActionListener(this);
+        grafik2 = new JButton("Grafik2");
+        grafik2.addActionListener(this);
         JPanel settingLocationStart = new JPanel();
         settingLocationStart.setLayout(new FlowLayout());
         settingLocationStart.add(startLocLab);
@@ -93,6 +105,9 @@ public class Board  extends JFrame implements ActionListener{
         settingIn.add(settingLocationStart);
         settingIn.add(settingLocationFinish);
         settingIn.add(start);
+        settingIn.add(reset);
+        settingIn.add(grafik1);
+        settingIn.add(grafik2);
         generate.add(settingIn);
         generate.setBorder(BorderFactory.createTitledBorder("Settings"));
         settings.add(generate);
@@ -106,6 +121,12 @@ public class Board  extends JFrame implements ActionListener{
                 for(int j=0;j<oyunBoard.getCols();j++){
                     if(oyunBoard.getGrid()[i][j].isDuvar()){
                          fw.write("\n("+i+","+j+",K)"+"\r\n");
+                    }else if (oyunBoard.getGrid()[i][j].p.equals(oyunBoard.getStart())){
+                         fw.write("\n("+i+","+j+",M)"+"\r\n");
+                    }else if (oyunBoard.getGrid()[i][j].p.equals(oyunBoard.getFinish())){
+                         fw.write("\n("+i+","+j+",Y)"+"\r\n");
+                    }else{
+                         fw.write("\n("+i+","+j+",B)"+"\r\n");
                     }
                 }
             }
@@ -116,15 +137,31 @@ public class Board  extends JFrame implements ActionListener{
             System.out.println("HATAA");
         }
     }
+    public void resetBackground(){
+        for(int i=0;i<this.oyunBoard.getLines();i++){
+            for(int j=0;j<this.oyunBoard.getCols();j++){
+                if(oyunBoard.getGrid()[i][j].isDuvar()){
+                    continue;
+                }else{
+                      oyunUI.getGridUI()[i][j].setBackground(oyunUI.dbg);
+                }
+              
+            }
+        }
+    }
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(startLoc.getText());
+         JButton source = (JButton) e.getSource();
+         if(source == start){
+              System.out.println(startLoc.getText());
         System.out.println(finishLoc.getText());
+        resetBackground();
         boolean giris = true;
+        
         String startLocString = startLoc.getText();
         String finishLocString = finishLoc.getText();
-            if(startLocString.equals("Number") || finishLocString.equals("Number") || startLocString.equals("") || finishLocString.equals("")){
+                if(startLocString.equals("Number") || finishLocString.equals("Number") || startLocString.equals("") || finishLocString.equals("")){
                 Frame frameForPopUp = new JFrame();
                 JOptionPane.showMessageDialog(frameForPopUp,"Start  or finish input invalid  location!!");
                 giris = false; 
@@ -133,36 +170,47 @@ public class Board  extends JFrame implements ActionListener{
         if(giris){
             Point startP = findGrid(Integer.parseInt(startLocString));
             Point finishP = findGrid(Integer.parseInt(finishLocString));
-            if(startP == null ||finishP == null){
+            if(startP == null ||finishP == null || oyunBoard.getGrid()[startP.x][startP.y].isDuvar() ||oyunBoard.getGrid()[finishP.x][finishP.y].isDuvar() ){ // if leri ayırabilrisn.
                  Frame frameForPopUp = new JFrame();
                 JOptionPane.showMessageDialog(frameForPopUp,"Start  or finish input invalid  location!!");
             }else{
-                 int startLocX = startP.x;
+            int startLocX = startP.x;
             int startLocY = startP.y;
             int finishLocX = finishP.x;
             int finishLocY = finishP.y;
             oyunBoard.setStart(new Point(startLocX,startLocY));
             oyunBoard.setFinish(new Point(finishLocX,finishLocY));
-            JLabel start = new JLabel();
-            start.setText("A");
-            oyunUI.grid[startLocX][startLocY].setBackground(Color.blue);
-            oyunUI.grid[startLocX][startLocY].add(start);  
-            JLabel finish = new JLabel();
-            finish.setText("B");
-            oyunUI.grid[finishLocX][finishLocY].setBackground(Color.green);
-            oyunUI.grid[finishLocX][finishLocY].add(finish);
+
+                oyunUI.grid[startLocX][startLocY].setBackground(Color.blue);
+                oyunUI.grid[finishLocX][finishLocY].setBackground(Color.green);     
+            // ----------------------------------------------------- //
             fileWrite();
+            // ----------------------------------------------------- //
             Q_Learning q = new Q_Learning(oyunBoard);
+         
             q.run();
             q.printResult(); 
-            ArrayList <Point> pointAr = q.showPolicy();
-            oyunUI.cizme(q.pointler);
+            //ArrayList <Point> pointAr = q.showPolicy();
+            //oyunUI.cizme(q.pointler);
+            q.showPolicy();
+            oyunUI.yolcizme(q.Y);
+            System.out.println(q.Y.length);
             }
            
+          }
+        }else if (source ==reset){
+        oyun.removeAll();     
+        oyunBoard = new Oyun(boardx,boardy);
+        oyunUI = new OyunUI(oyunBoard);
+        oyun.add(oyunUI);
+        oyun.repaint();
+        oyun.revalidate();
+          
+        }else if (source ==  grafik1){
+           NewFXMain newFx = new NewFXMain();
+            newFx.basla(gecici1,gecici2);
+    
         }
-        
-        
-        
     }
     public Point findGrid(int s){
         Point p = null;

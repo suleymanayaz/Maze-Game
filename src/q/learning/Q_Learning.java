@@ -12,35 +12,50 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Q_Learning {
+   boolean bitis = false;
    final DecimalFormat df = new DecimalFormat("#.##");
    Oyun oyun;
    OyunUI oyunui;
-   final double alpha = 0.8;
+   final double alpha = 0.9;
    final double gamma = 0.9;
    int statesCount;
    int [][] R;
    double [][] Q;
+   int [] Y;
    int stateFinish;
    ArrayList<Point> pointler = new ArrayList();
-   
+   ArrayList<ArrayList<Integer>> kazanclar = new ArrayList();
+   ArrayList<Integer> kazanc = new ArrayList();
+   ArrayList<ArrayList<Double>> maliyetler = new ArrayList(); 
+   ArrayList<Double> maliyet = new ArrayList(); 
     public Q_Learning(Oyun oyun){
       this.oyun = oyun;
       this.statesCount=createSira();
+      R = new int [statesCount][statesCount];  // 8*8 = {0}
+      Q = new double [statesCount][statesCount];  // 8*8 {0}
+      Y = new int [statesCount+1];
       komsuBul();
       init();
-      printResult();
-             
-
+    }
+    public Q_Learning(){
+        
     }
     
-    
+   
     public void init(){
-       R = new int [statesCount][statesCount];
-       Q = new double [statesCount][statesCount];
+
        this.stateFinish = oyun.getGrid()[oyun.getFinish().x][oyun.getFinish().y].getSira();
+       
        for(Node n : oyun.getGrid()[oyun.getFinish().x][oyun.getFinish().y].getKomsular()){
-           R[n.getSira()][stateFinish] = 100;
-           //R[KOMSULARIN SATATELERİ][FİNİSH STATE] = 100
+           if(!oyun.getGrid()[n.p.x][n.p.y].isDuvar())
+            R[n.getSira()][stateFinish] = 100;
+       }
+       for(int i = 0; i<statesCount;i++){
+           for(int j =0;j<statesCount;j++){
+             
+               System.out.print(R[i][j]+" ");
+           }
+           System.out.println("");
        }
        //R[stateB][stateC] = 100; // from b to c
        //R[stateF][stateC] = 100; // from f to c     
@@ -56,59 +71,156 @@ public class Q_Learning {
     }
     
     public void komsuBul(){
+        int startTemp;
+        int finishTemp;
         for(int i=0;i<this.oyun.getLines();i++){
             for(int j=0;j<this.oyun.getCols();j++){
-                if(i-1>=0 && oyun.getGrid()[i-1][j].isDuvar() == false){
+                if(i-1>=0){ 
+                    if(oyun.getGrid()[i-1][j].isDuvar() == false){
+                          startTemp = oyun.getGrid()[i][j].getSira();
+                          finishTemp = oyun.getGrid()[i-1][j].getSira();
+                         R[startTemp][finishTemp] = 3;
                     oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i-1][j]);
+
+                    }else{
+                          startTemp = oyun.getGrid()[i][j].getSira();
+                          finishTemp = oyun.getGrid()[i-1][j].getSira();
+                         R[startTemp][finishTemp] = -5;
+                    }   
+                         
                 }
-                if(i+1<oyun.getLines() && oyun.getGrid()[i+1][j].isDuvar() == false ){
-                    oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i+1][j]);  
+                if(i+1<oyun.getLines()){
+                    if(oyun.getGrid()[i+1][j].isDuvar() == false){
+                        startTemp = oyun.getGrid()[i][j].getSira();
+                         finishTemp = oyun.getGrid()[i+1][j].getSira();
+                        R[startTemp][finishTemp] = 3;
+                      oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i+1][j]);  
+                    }else{
+                          startTemp = oyun.getGrid()[i][j].getSira();
+                          finishTemp = oyun.getGrid()[i+1][j].getSira();
+                         R[startTemp][finishTemp] = -5;
+                    }
+                     
                 }
-                if(j-1>=0 && oyun.getGrid()[i][j-1].isDuvar() == false){
-                    oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i][j-1]);
+                if(j-1>=0 ){
+                    if(oyun.getGrid()[i][j-1].isDuvar() == false){
+                         startTemp = oyun.getGrid()[i][j].getSira();
+                         finishTemp = oyun.getGrid()[i][j-1].getSira();
+                        R[startTemp][finishTemp] = 3;
+                      oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i][j-1]); 
+                    }else{
+                          startTemp = oyun.getGrid()[i][j].getSira();
+                         finishTemp = oyun.getGrid()[i][j-1].getSira();
+                        R[startTemp][finishTemp] = -5;
+                    }
+                     
+                    
                 }
-                if(j+1<oyun.getCols() && oyun.getGrid()[i][j+1].isDuvar() == false){
-                     oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i][j+1]);
+                if(j+1<oyun.getCols()){
+                    if(oyun.getGrid()[i][j+1].isDuvar() == false){
+                         startTemp = oyun.getGrid()[i][j].getSira();
+                         finishTemp = oyun.getGrid()[i][j+1].getSira();
+                        R[startTemp][finishTemp] = 3;
+                       oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i][j+1]);  
+                    }else{
+                         startTemp = oyun.getGrid()[i][j].getSira();
+                         finishTemp = oyun.getGrid()[i][j+1].getSira();
+                        R[startTemp][finishTemp] = -5;
+                    }
+                    
+                   
+                
                 }
-                /*
-                if( i-1>=0 && j+1<oyun.getCols() && oyun.getGrid()[i-1][j+1].isDuvar() == false){
-                    oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i-1][j+1]);
+              
+                if( i-1>=0 && j+1<oyun.getCols()){
+                    if(oyun.getGrid()[i-1][j+1].isDuvar() == false){
+                         startTemp = oyun.getGrid()[i][j].getSira();
+                         finishTemp = oyun.getGrid()[i-1][j+1].getSira();
+                        R[startTemp][finishTemp] = 3;
+                       oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i-1][j+1]);
+                    }else{
+                         startTemp = oyun.getGrid()[i][j].getSira();
+                         finishTemp = oyun.getGrid()[i-1][j+1].getSira();
+                        R[startTemp][finishTemp] = -5;
+                    }
+                     
                 }
-                if( i-1>=0 && j-1 >=0 && oyun.getGrid()[i-1][j-1].isDuvar() == false){
-                    oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i-1][j-1]);
+                if( i-1>=0 && j-1 >=0){
+                    if(oyun.getGrid()[i-1][j-1].isDuvar() == false){
+                         startTemp = oyun.getGrid()[i][j].getSira();
+                         finishTemp = oyun.getGrid()[i-1][j-1].getSira();
+                        R[startTemp][finishTemp] = 3;
+                      oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i-1][j-1]);
+                    }else{
+                         startTemp = oyun.getGrid()[i][j].getSira();
+                         finishTemp = oyun.getGrid()[i-1][j-1].getSira();
+                        R[startTemp][finishTemp] = -5;
+                    }  
+                      
                 }
-                if(i+1<oyun.getLines() && j+1 < oyun.getCols() && oyun.getGrid()[i+1][j+1].isDuvar() == false){
-                    oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i+1][j+1]);
+                if(i+1<oyun.getLines() && j+1 < oyun.getCols()){
+                    if(oyun.getGrid()[i+1][j+1].isDuvar() == false){
+                        startTemp = oyun.getGrid()[i][j].getSira();
+                        finishTemp = oyun.getGrid()[i+1][j+1].getSira();
+                       R[startTemp][finishTemp] = 3;
+                      oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i+1][j+1]);
+                    }else{
+                        startTemp = oyun.getGrid()[i][j].getSira();
+                        finishTemp = oyun.getGrid()[i+1][j+1].getSira();
+                       R[startTemp][finishTemp] = -5; 
+                    }
+                     
+                  
                 }
-                if(i+1<oyun.getLines() && j-1>=0 && oyun.getGrid()[i+1][j-1].isDuvar() == false){
-                    oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i+1][j-1]);
+                if(i+1<oyun.getLines() && j-1>=0 ){
+                    if(oyun.getGrid()[i+1][j-1].isDuvar() == false){
+                        startTemp = oyun.getGrid()[i][j].getSira();
+                        finishTemp = oyun.getGrid()[i+1][j-1].getSira();
+                       R[startTemp][finishTemp] = 3;
+                         oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i+1][j-1]);
+                    }else{
+                        startTemp = oyun.getGrid()[i][j].getSira();
+                        finishTemp = oyun.getGrid()[i+1][j-1].getSira();
+                       R[startTemp][finishTemp] = -5; 
+                    }
+                   
+                   
+                   
                 }
-              */
+            
             }
         }
     }
     
     public void run(){
         Random rand = new Random();
-        for(int i = 0;i<1;i++){
+        for(int i = 0;i<100;i++){
+            if(kazanc.isEmpty()!=true && maliyet.isEmpty()!=true){               
+                kazanclar.add(kazanc);
+                maliyetler.add(maliyet);
+            }
+            kazanc.clear();
+            maliyet.clear();
             int state = oyun.getGrid()[oyun.getStart().x][oyun.getStart().y].getSira();        
             while(state!=stateFinish){
                 Point p = findGrid(state);
                 int index = rand.nextInt(oyun.getGrid()[p.x][p.y].getKomsular().size());     
                 int action = oyun.getGrid()[p.x][p.y].getKomsular().get(index).getSira();
-                Point a = findGrid(action);
-                if(!oyun.getGrid()[a.x][a.y].isDuvar()){
-                pointler.add(a);
-                             
+                Point a = findGrid(action);   
+                pointler.add(a);                          
                 int nextState = action;
                 double q = Q(state,action);
                 double maxQ = maxQ(nextState);
-                int r = R(state,action);
-                
-                double value = q + alpha * (r + gamma* maxQ - q);
+                int r = R(state,action);    
+                kazanc.add(r);
+                double value = r+(gamma*maxQ);
+                maliyet.add(value);
+                //System.out.println(value);
+                //double value = q + alpha * ( r + (gamma * (maxQ))-q);
+                //double value = q + alpha * (r + gamma* maxQ - q);
                 setQ(state,action,value);         
                 state = nextState;
-                }
+                
             }
         }
        
@@ -121,6 +233,12 @@ public class Q_Learning {
     }
     public int R(int s,int a){
         return R[s][a];
+    }
+    public void setR(int s,int a,int value){
+        R[s][a]=value;
+    }
+    void setY(int s,int a){
+        Y[s] = a;
     }
     public double maxQ(int s){
         double maxValue = Double.MIN_VALUE;
@@ -156,9 +274,8 @@ public class Q_Learning {
           double value  = Q[state][nextState];
           if(value > maxValue){
                 maxValue = value;
-          policyGotoState = nextState;
-          }
-            
+            policyGotoState = nextState;
+          }      
     }
     return policyGotoState;
     }
@@ -184,13 +301,16 @@ public class Q_Learning {
                              int from = oyun.getGrid()[i][j].getSira();
                 int to = policy(from);
                 Point p = findGrid(to);
-                pointAr.add(oyun.getGrid()[i][j].p);
-                pointAr.add(p);
+                //pointAr.add(oyun.getGrid()[i][j].p);
+                //pointAr.add(p);
+                // index [0] = 1 
+                setY(oyun.getGrid()[i][j].getSira(),oyun.getGrid()[p.x][p.y].getSira());
                 System.out.println("From :"+oyun.getGrid()[i][j].getSira()+" --> GO TO :"+oyun.getGrid()[p.x][p.y].getSira());
                 }
        
             }
         }
+        bitis = true;
         return pointAr;
     }
      

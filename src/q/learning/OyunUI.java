@@ -45,8 +45,7 @@ public class OyunUI extends JPanel implements MouseListener{
         gbc = new GridBagConstraints();
         dbg = getBackground();
         reset();
-        paint(getGraphics());
-        
+        paint(getGraphics());       
         System.out.println("HARİTA OLUSTURULDU!!!");
     }
      public NodeUI[][] getGridUI(){
@@ -80,12 +79,7 @@ public class OyunUI extends JPanel implements MouseListener{
       }
       public void reset(){
         NodeUI n;
-        if(oyun.getStart().x == 0 && oyun.getStart().y == 0){
-            randomStart(); // ilklendirme yapılmadıysa
-        }
-        if(oyun.getFinish().x == 0 && oyun.getFinish().y == 0){
-            randomFinish(); // ilklendirme yapılmadıysa
-        }
+     
         for(int i = 0;i < oyun.getLines(); i++){
             for(int j = 0;j < oyun.getCols(); j++){
                 Point newPoint = new Point(i,j);
@@ -128,7 +122,7 @@ public class OyunUI extends JPanel implements MouseListener{
            for(Point p : pointArr){
                if(oyun.getStart().equals(p)){
                    grid[p.x][p.y].setBackground(Color.yellow);
-                   this.paintAll(getGraphics());
+                    this.paintAll(getGraphics());
                      try {
                  Thread.sleep(100); // delay
                     } catch (InterruptedException e) {
@@ -137,7 +131,7 @@ public class OyunUI extends JPanel implements MouseListener{
                   grid[p.x][p.y].setBackground(Color.blue);    
                }else if ( oyun.getFinish().equals(p)){
                    grid[p.x][p.y].setBackground(Color.yellow);
-                   this.paintAll(getGraphics());
+                    this.paintAll(getGraphics());
                      try {
                  Thread.sleep(100); // delay
                     } catch (InterruptedException e) {
@@ -146,17 +140,44 @@ public class OyunUI extends JPanel implements MouseListener{
                   grid[p.x][p.y].setBackground(Color.GREEN);
                }else{
                      grid[p.x][p.y].setBackground(Color.yellow);
-                this.paintAll(getGraphics());
+                      this.paintAll(getGraphics());
                   try {
                  Thread.sleep(100); // delay
                     } catch (InterruptedException e) {
                     e.printStackTrace();
                 }  
+             
                 grid[p.x][p.y].setBackground(dbg);
+                
                }
-              
+             
             }
       }
+      
+      public void yolcizme(int [] Y){
+          int start = oyun.getGrid()[oyun.getStart().x][oyun.getStart().y].getSira();
+          int finish = oyun.getGrid()[oyun.getFinish().x][oyun.getFinish().y].getSira();
+          int state = start;
+          while(state != finish){
+              state = Y[state];
+              if(state == finish){
+                  continue;
+              }
+              Point p = findGrid(state);
+              grid[p.x][p.y].setBackground(Color.gray);
+          }
+      }
+       public Point findGrid(int s){
+        Point p = null;
+        for(int i=0;i<oyun.getLines();i++){
+            for(int j=0;j<oyun.getCols();j++){
+                if(oyun.getGrid()[i][j].getSira() == s){
+                    p = new Point(i,j);
+                }
+            }
+        }
+        return p ;
+    }
       
  
       
