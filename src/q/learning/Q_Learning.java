@@ -227,6 +227,9 @@ public class Q_Learning {
             kazanc = new ArrayList();
             maliyet = new ArrayList();
             point = new ArrayList();
+            // tekrarlama sayısı
+            // sona geldiğinde maliyet
+            // duvara gelince sonra ne olcağı
             int state = oyun.getGrid()[oyun.getStart().x][oyun.getStart().y].getSira();        
             while(state!=stateFinish){
                 Point p = findGrid(state);

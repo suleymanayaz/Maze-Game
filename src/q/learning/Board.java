@@ -90,10 +90,12 @@ public class Board  extends JFrame implements ActionListener{
         finishLocLab = new JLabel("Finish Location : ");
         reset = new JButton("Reset");
         reset.addActionListener(this);
-        grafik1 = new JButton("Grafik1");
+        grafik1 = new JButton("Grafik");
         grafik1.addActionListener(this);
-        grafik2 = new JButton("Grafik2");
-        grafik2.addActionListener(this);
+        JPanel butonlar = new JPanel();
+        butonlar.add(start);
+        butonlar.add(reset);
+        butonlar.add(grafik1);
         JPanel settingLocationStart = new JPanel();
         settingLocationStart.setLayout(new FlowLayout());
         settingLocationStart.add(startLocLab);
@@ -106,10 +108,7 @@ public class Board  extends JFrame implements ActionListener{
         settingIn.setLayout(new BoxLayout(settingIn,BoxLayout.Y_AXIS));
         settingIn.add(settingLocationStart);
         settingIn.add(settingLocationFinish);
-        settingIn.add(start);
-        settingIn.add(reset);
-        settingIn.add(grafik1);
-        settingIn.add(grafik2);
+        settingIn.add(butonlar);
         generate.add(settingIn);
         generate.setBorder(BorderFactory.createTitledBorder("Settings"));
         settings.add(generate);
@@ -210,11 +209,10 @@ public class Board  extends JFrame implements ActionListener{
         oyun.repaint();
         oyun.revalidate();
           
-        }else if (source ==  grafik1){
+        }else{
            new GrafikCizme(gecici1,gecici2,deger);
+            new GrafikCizme(gecici3);
     
-        } else if (source == grafik2){
-           new GrafikCizme(gecici3);
         }
     }
     public Point findGrid(int s){

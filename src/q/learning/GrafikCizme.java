@@ -48,13 +48,14 @@ public class GrafikCizme{
         ChartFrame frame = new ChartFrame("Graph",grafikAyarlari());
            
         frame.setVisible(true);
-        frame.setSize(800,800);
+        frame.setSize(900,900);
     }
     public GrafikCizme(ArrayList<ArrayList<Point>> point){
         this.pointler = point;
         ChartFrame frame = new ChartFrame("Graph2",grafik2Ayarlari());
          frame.setVisible(true);
-        frame.setSize(800,800);
+         frame.setLocation(885, 0);
+         frame.setSize(900,900);
     }
      public JFreeChart grafik2Ayarlari(){
           int counter = 0;
@@ -66,7 +67,7 @@ public class GrafikCizme{
           XYSeriesCollection dataset = new XYSeriesCollection(series);
       dataset.setAutoWidth(true);
 
-      JFreeChart chart = ChartFactory.createXYBarChart("Episode via cost Graph", "Episode",false,"Steps", dataset, PlotOrientation.VERTICAL, false,false,false);
+      JFreeChart chart = ChartFactory.createXYBarChart("Episode via cost Step", "Episode",false,"Steps", dataset, PlotOrientation.VERTICAL, false,false,false);
       XYPlot plot = chart.getXYPlot();
         
        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
