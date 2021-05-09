@@ -38,13 +38,14 @@ public class GrafikCizme{
    ArrayList<ArrayList<Integer>> kazanclar;
    ArrayList<ArrayList<Double>> maliyetler;
   ArrayList<ArrayList<Point>> pointler;
+  int []Y;
+
 
    int deger;
     public GrafikCizme(ArrayList<ArrayList<Integer>> kazanc,ArrayList<ArrayList<Double>> maliyet,int deger){
         kazanclar = kazanc;
         maliyetler = maliyet;
         this.deger = deger;
-    
         ChartFrame frame = new ChartFrame("Graph",grafikAyarlari());
            
         frame.setVisible(true);
@@ -57,6 +58,50 @@ public class GrafikCizme{
          frame.setLocation(885, 0);
          frame.setSize(900,900);
     }
+     public GrafikCizme(int [] Y,Oyun oyun){
+        this.Y = Y;
+        ChartFrame frame = new ChartFrame("Graph3",grafik3Ayarlari(oyun));
+         frame.setVisible(true);
+         frame.setSize(900,900);
+     }
+     
+     
+     
+    public JFreeChart grafik3Ayarlari(Oyun oyun){
+          XYSeries series = new XYSeries("Graph");
+          System.out.println(Y.length);
+          int start = oyun.getGrid()[oyun.getStart().x][oyun.getStart().y].getSira();
+          int finish = oyun.getGrid()[oyun.getFinish().x][oyun.getFinish().y].getSira();
+          int state = start;
+          int counter = 0;
+          series.add(counter,start);
+          counter++;
+          while(state != finish){
+             state = Y[state];
+              if(state == finish){
+                  continue;
+              }
+              series.add(counter, state);
+              counter++;
+          }
+          series.add(counter,finish);
+          XYSeriesCollection dataset = new XYSeriesCollection(series);
+      dataset.setIntervalWidth(0.2f);
+
+      JFreeChart chart = ChartFactory.createXYBarChart("YOL CIZIMI", "Episode",false,"State", dataset, PlotOrientation.VERTICAL, false,false,false);
+      XYPlot plot = chart.getXYPlot();    
+       XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+       renderer.setSeriesPaint(0, Color.BLUE);
+       renderer.setSeriesStroke(deger, new BasicStroke(0.5f));
+       renderer.setBaseShapesFilled(false);
+       renderer.setDrawOutlines(false);
+       plot.getDomainAxis().setUpperMargin(1);
+       plot.setRangeGridlinesVisible(true);
+       plot.setRangeGridlinePaint(Color.BLACK);
+       
+       return chart;
+    }
+    
      public JFreeChart grafik2Ayarlari(){
           int counter = 0;
           XYSeries series = new XYSeries("Graph");
@@ -72,7 +117,7 @@ public class GrafikCizme{
         
        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
        renderer.setSeriesPaint(0, Color.BLUE);
-       renderer.setSeriesStroke(deger, new BasicStroke(0.1f));
+       renderer.setSeriesStroke(deger, new BasicStroke(0.5f));
        renderer.setBaseShapesFilled(false);
        renderer.setDrawOutlines(false);
        plot.getDomainAxis().setUpperMargin(0);

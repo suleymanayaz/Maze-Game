@@ -211,10 +211,7 @@ public class Q_Learning {
     
     public void run(){
         Random rand = new Random();
-        int engelCounter = 1;
         int n;
-        if(engelSayisi !=0)
-            engelCounter = engelSayisi*10;
         if(oyun.getCols() > oyun.getLines()){
             n = oyun.getCols()*oyun.getCols();
         }else if (oyun.getCols()< oyun.getLines()){
@@ -223,13 +220,11 @@ public class Q_Learning {
             n = oyun.getLines()*oyun.getCols();
         }
         System.out.println(n);
-        for(int i = 0;i<n*(engelCounter+1);i++){
+        for(int i = 0;i<n;i++){
             kazanc = new ArrayList();
             maliyet = new ArrayList();
             point = new ArrayList();
-            // tekrarlama sayısı
             // sona geldiğinde maliyet
-            // duvara gelince sonra ne olcağı
             int state = oyun.getGrid()[oyun.getStart().x][oyun.getStart().y].getSira();        
             while(state!=stateFinish){
                 Point p = findGrid(state);
@@ -259,7 +254,7 @@ public class Q_Learning {
                     if(!oyun.getGrid()[a.x][a.y].isDuvar()){
                         state = nextState;
                     }else{
-                        break;
+                        state = oyun.getGrid()[oyun.getStart().x][oyun.getStart().y].getSira();        
                     }    
                  }
 

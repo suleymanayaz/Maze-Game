@@ -43,13 +43,14 @@ import javax.swing.JTextField;
  */
 public class Board  extends JFrame implements ActionListener{
     
-    int boardx = 10,boardy=10;
+    int boardx = 20,boardy=10;
     JPanel oyun,settings,generate,sonuc,sonuclar,oyuncular;
     JButton start,reset,grafik1,grafik2;
     JTextField startLoc,finishLoc;
     JLabel startLocLab,finishLocLab;
     Oyun oyunBoard;
     int deger;
+    int [] Y;
     OyunUI oyunUI;
     File file = new File("C:\\Users\\AYAZ\\Documents\\NetBeansProjects\\Q-Learning\\engel.txt");
     ArrayList <ArrayList<Integer> > gecici1;
@@ -198,6 +199,7 @@ public class Board  extends JFrame implements ActionListener{
             gecici1 = q.kazanclar;
             gecici2 = q.maliyetler;
             gecici3 = q.pointler;
+            Y = q.Y;
             }
            
           }
@@ -211,8 +213,8 @@ public class Board  extends JFrame implements ActionListener{
           
         }else{
            new GrafikCizme(gecici1,gecici2,deger);
-            new GrafikCizme(gecici3);
-    
+           new GrafikCizme(gecici3);
+           new GrafikCizme(Y,oyunBoard);
         }
     }
     public Point findGrid(int s){
