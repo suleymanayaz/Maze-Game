@@ -122,9 +122,10 @@ public class OyunUI extends JPanel implements MouseListener{
            for(Point p : pointArr){
                if(oyun.getStart().equals(p)){
                    grid[p.x][p.y].setBackground(Color.yellow);
-                    this.paintAll(getGraphics());
+                   this.paintAll(getGraphics());
+                    
                      try {
-                 Thread.sleep(100); // delay
+                 Thread.sleep(50); // delay
                     } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -133,7 +134,7 @@ public class OyunUI extends JPanel implements MouseListener{
                    grid[p.x][p.y].setBackground(Color.yellow);
                     this.paintAll(getGraphics());
                      try {
-                 Thread.sleep(100); // delay
+                 Thread.sleep(50); // delay
                     } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -142,15 +143,16 @@ public class OyunUI extends JPanel implements MouseListener{
                      grid[p.x][p.y].setBackground(Color.yellow);
                       this.paintAll(getGraphics());
                   try {
-                 Thread.sleep(100); // delay
+                 Thread.sleep(50); // delay
                     } catch (InterruptedException e) {
                     e.printStackTrace();
                 }  
-             
-                grid[p.x][p.y].setBackground(dbg);
-                
+                if(oyun.getGrid()[p.x][p.y].isDuvar()){
+                    grid[p.x][p.y].setBackground(Color.RED);
+                }else{
+                grid[p.x][p.y].setBackground(dbg);             
                }
-             
+               }
             }
       }
       

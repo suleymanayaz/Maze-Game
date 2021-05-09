@@ -43,16 +43,18 @@ import javax.swing.JTextField;
  */
 public class Board  extends JFrame implements ActionListener{
     
-    int boardx = 3,boardy=3;
+    int boardx = 10,boardy=10;
     JPanel oyun,settings,generate,sonuc,sonuclar,oyuncular;
     JButton start,reset,grafik1,grafik2;
     JTextField startLoc,finishLoc;
     JLabel startLocLab,finishLocLab;
     Oyun oyunBoard;
+    int deger;
     OyunUI oyunUI;
     File file = new File("C:\\Users\\AYAZ\\Documents\\NetBeansProjects\\Q-Learning\\engel.txt");
     ArrayList <ArrayList<Integer> > gecici1;
     ArrayList <ArrayList<Double>> gecici2;
+      ArrayList <ArrayList<Point>> gecici3;
     public static void main(String []args){
         new Board();
     }
@@ -192,9 +194,11 @@ public class Board  extends JFrame implements ActionListener{
             q.printResult(); 
             //ArrayList <Point> pointAr = q.showPolicy();
             //oyunUI.cizme(q.pointler);
-            q.showPolicy();
+            q.showPolicy(); 
             oyunUI.yolcizme(q.Y);
-            System.out.println(q.Y.length);
+            gecici1 = q.kazanclar;
+            gecici2 = q.maliyetler;
+            gecici3 = q.pointler;
             }
            
           }
@@ -207,9 +211,10 @@ public class Board  extends JFrame implements ActionListener{
         oyun.revalidate();
           
         }else if (source ==  grafik1){
-           NewFXMain newFx = new NewFXMain();
-            newFx.basla(gecici1,gecici2);
+           new GrafikCizme(gecici1,gecici2,deger);
     
+        } else if (source == grafik2){
+           new GrafikCizme(gecici3);
         }
     }
     public Point findGrid(int s){
@@ -225,7 +230,6 @@ public class Board  extends JFrame implements ActionListener{
     }
 
  
-
     
     
     

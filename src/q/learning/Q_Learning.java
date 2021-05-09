@@ -16,18 +16,21 @@ public class Q_Learning {
    final DecimalFormat df = new DecimalFormat("#.##");
    Oyun oyun;
    OyunUI oyunui;
-   final double alpha = 0.9;
+   final double alpha = 0.8;
    final double gamma = 0.9;
    int statesCount;
    int [][] R;
    double [][] Q;
    int [] Y;
+   int deger;
    int stateFinish;
-   ArrayList<Point> pointler = new ArrayList();
+   int engelSayisi;
+   ArrayList<Point> point;
+   ArrayList<ArrayList<Point>> pointler = new ArrayList();
    ArrayList<ArrayList<Integer>> kazanclar = new ArrayList();
-   ArrayList<Integer> kazanc = new ArrayList();
+   ArrayList<Integer> kazanc;
    ArrayList<ArrayList<Double>> maliyetler = new ArrayList(); 
-   ArrayList<Double> maliyet = new ArrayList(); 
+   ArrayList<Double> maliyet;
     public Q_Learning(Oyun oyun){
       this.oyun = oyun;
       this.statesCount=createSira();
@@ -48,11 +51,15 @@ public class Q_Learning {
        
        for(Node n : oyun.getGrid()[oyun.getFinish().x][oyun.getFinish().y].getKomsular()){
            if(!oyun.getGrid()[n.p.x][n.p.y].isDuvar())
-            R[n.getSira()][stateFinish] = 100;
+            R[n.getSira()][stateFinish] =5;
        }
        for(int i = 0; i<statesCount;i++){
            for(int j =0;j<statesCount;j++){
-             
+              if(R[i][j] == 0){
+                  if(i!=j){
+                      R[i][j]= -1;
+                  }
+              }
                System.out.print(R[i][j]+" ");
            }
            System.out.println("");
@@ -80,13 +87,13 @@ public class Q_Learning {
                           startTemp = oyun.getGrid()[i][j].getSira();
                           finishTemp = oyun.getGrid()[i-1][j].getSira();
                          R[startTemp][finishTemp] = 3;
-                    oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i-1][j]);
-
                     }else{
+                        engelSayisi++;
                           startTemp = oyun.getGrid()[i][j].getSira();
                           finishTemp = oyun.getGrid()[i-1][j].getSira();
                          R[startTemp][finishTemp] = -5;
                     }   
+                     oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i-1][j]);
                          
                 }
                 if(i+1<oyun.getLines()){
@@ -94,12 +101,14 @@ public class Q_Learning {
                         startTemp = oyun.getGrid()[i][j].getSira();
                          finishTemp = oyun.getGrid()[i+1][j].getSira();
                         R[startTemp][finishTemp] = 3;
-                      oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i+1][j]);  
+                     
                     }else{
+                          engelSayisi++;
                           startTemp = oyun.getGrid()[i][j].getSira();
                           finishTemp = oyun.getGrid()[i+1][j].getSira();
                          R[startTemp][finishTemp] = -5;
                     }
+                      oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i+1][j]); 
                      
                 }
                 if(j-1>=0 ){
@@ -107,13 +116,14 @@ public class Q_Learning {
                          startTemp = oyun.getGrid()[i][j].getSira();
                          finishTemp = oyun.getGrid()[i][j-1].getSira();
                         R[startTemp][finishTemp] = 3;
-                      oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i][j-1]); 
+                     
                     }else{
+                          engelSayisi++;
                           startTemp = oyun.getGrid()[i][j].getSira();
                          finishTemp = oyun.getGrid()[i][j-1].getSira();
                         R[startTemp][finishTemp] = -5;
                     }
-                     
+                      oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i][j-1]); 
                     
                 }
                 if(j+1<oyun.getCols()){
@@ -121,13 +131,14 @@ public class Q_Learning {
                          startTemp = oyun.getGrid()[i][j].getSira();
                          finishTemp = oyun.getGrid()[i][j+1].getSira();
                         R[startTemp][finishTemp] = 3;
-                       oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i][j+1]);  
+                       
                     }else{
+                          engelSayisi++;
                          startTemp = oyun.getGrid()[i][j].getSira();
                          finishTemp = oyun.getGrid()[i][j+1].getSira();
                         R[startTemp][finishTemp] = -5;
                     }
-                    
+                     oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i][j+1]); 
                    
                 
                 }
@@ -137,25 +148,28 @@ public class Q_Learning {
                          startTemp = oyun.getGrid()[i][j].getSira();
                          finishTemp = oyun.getGrid()[i-1][j+1].getSira();
                         R[startTemp][finishTemp] = 3;
-                       oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i-1][j+1]);
+                       
                     }else{
+                          engelSayisi++;
                          startTemp = oyun.getGrid()[i][j].getSira();
                          finishTemp = oyun.getGrid()[i-1][j+1].getSira();
                         R[startTemp][finishTemp] = -5;
                     }
-                     
+                     oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i-1][j+1]);
                 }
                 if( i-1>=0 && j-1 >=0){
                     if(oyun.getGrid()[i-1][j-1].isDuvar() == false){
                          startTemp = oyun.getGrid()[i][j].getSira();
                          finishTemp = oyun.getGrid()[i-1][j-1].getSira();
                         R[startTemp][finishTemp] = 3;
-                      oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i-1][j-1]);
+                     
                     }else{
+                          engelSayisi++;
                          startTemp = oyun.getGrid()[i][j].getSira();
                          finishTemp = oyun.getGrid()[i-1][j-1].getSira();
                         R[startTemp][finishTemp] = -5;
                     }  
+                     oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i-1][j-1]);
                       
                 }
                 if(i+1<oyun.getLines() && j+1 < oyun.getCols()){
@@ -163,13 +177,14 @@ public class Q_Learning {
                         startTemp = oyun.getGrid()[i][j].getSira();
                         finishTemp = oyun.getGrid()[i+1][j+1].getSira();
                        R[startTemp][finishTemp] = 3;
-                      oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i+1][j+1]);
+                    
                     }else{
+                          engelSayisi++;
                         startTemp = oyun.getGrid()[i][j].getSira();
                         finishTemp = oyun.getGrid()[i+1][j+1].getSira();
                        R[startTemp][finishTemp] = -5; 
                     }
-                     
+                       oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i+1][j+1]);
                   
                 }
                 if(i+1<oyun.getLines() && j-1>=0 ){
@@ -177,12 +192,14 @@ public class Q_Learning {
                         startTemp = oyun.getGrid()[i][j].getSira();
                         finishTemp = oyun.getGrid()[i+1][j-1].getSira();
                        R[startTemp][finishTemp] = 3;
-                         oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i+1][j-1]);
+                        
                     }else{
+                          engelSayisi++;
                         startTemp = oyun.getGrid()[i][j].getSira();
                         finishTemp = oyun.getGrid()[i+1][j-1].getSira();
                        R[startTemp][finishTemp] = -5; 
                     }
+                     oyun.getGrid()[i][j].addKomsular(oyun.getGrid()[i+1][j-1]);
                    
                    
                    
@@ -194,34 +211,62 @@ public class Q_Learning {
     
     public void run(){
         Random rand = new Random();
-        for(int i = 0;i<100;i++){
-            if(kazanc.isEmpty()!=true && maliyet.isEmpty()!=true){               
-                kazanclar.add(kazanc);
-                maliyetler.add(maliyet);
-            }
-            kazanc.clear();
-            maliyet.clear();
+        int engelCounter = 1;
+        int n;
+        if(engelSayisi !=0)
+            engelCounter = engelSayisi*10;
+        if(oyun.getCols() > oyun.getLines()){
+            n = oyun.getCols()*oyun.getCols();
+        }else if (oyun.getCols()< oyun.getLines()){
+            n = oyun.getLines()*oyun.getLines();
+        }else{
+            n = oyun.getLines()*oyun.getCols();
+        }
+        System.out.println(n);
+        for(int i = 0;i<n*(engelCounter+1);i++){
+            kazanc = new ArrayList();
+            maliyet = new ArrayList();
+            point = new ArrayList();
             int state = oyun.getGrid()[oyun.getStart().x][oyun.getStart().y].getSira();        
             while(state!=stateFinish){
                 Point p = findGrid(state);
                 int index = rand.nextInt(oyun.getGrid()[p.x][p.y].getKomsular().size());     
                 int action = oyun.getGrid()[p.x][p.y].getKomsular().get(index).getSira();
-                Point a = findGrid(action);   
-                pointler.add(a);                          
+                Point a = findGrid(action);
+               
+                point.add(a);                          
                 int nextState = action;
                 double q = Q(state,action);
                 double maxQ = maxQ(nextState);
-                int r = R(state,action);    
+                int r = R(state,action);   
                 kazanc.add(r);
-                double value = r+(gamma*maxQ);
-                maliyet.add(value);
-                //System.out.println(value);
-                //double value = q + alpha * ( r + (gamma * (maxQ))-q);
-                //double value = q + alpha * (r + gamma* maxQ - q);
-                setQ(state,action,value);         
-                state = nextState;
-                
+           
+                //double value = r+(gamma*maxQ);
+                if(nextState == stateFinish){
+                    double value = r;
+                   // System.out.println("STATE : "+state+"action : "+action + " : "+value +" : " + i);
+                    maliyet.add(value);
+                     setQ(state,action,value); 
+                     state = nextState;
+                }else{
+                    double value =  (alpha * ( r + (gamma * (maxQ) - q )));
+                    maliyet.add(value);
+                    //double value = q + alpha * (r + gamma* maxQ - q);
+                    setQ(state,action,value);
+                    if(!oyun.getGrid()[a.x][a.y].isDuvar()){
+                        state = nextState;
+                    }else{
+                        break;
+                    }    
+                 }
+
+                //System.out.println(value);   
             }
+
+                kazanclar.add(kazanc);
+                maliyetler.add(maliyet);
+                pointler.add(point);
+   
         }
        
     }
