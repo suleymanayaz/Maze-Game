@@ -14,6 +14,7 @@ import java.util.Collections;
 import javax.swing.JFrame;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.plot.CategoryPlot;
@@ -36,18 +37,20 @@ import org.jfree.data.xy.XYSeriesCollection;
 public class GrafikCizme{
        final DecimalFormat df = new DecimalFormat("#.##");
    ArrayList<ArrayList<Integer>> kazanclar;
-   ArrayList<ArrayList<Double>> maliyetler;
+   ArrayList<Double> maliyetler;
   ArrayList<ArrayList<Point>> pointler;
   int []Y;
 
 
    int deger;
-    public GrafikCizme(ArrayList<ArrayList<Integer>> kazanc,ArrayList<ArrayList<Double>> maliyet,int deger){
+    public GrafikCizme(ArrayList<ArrayList<Integer>> kazanc,ArrayList<Double> maliyet,int deger){
         kazanclar = kazanc;
         maliyetler = maliyet;
         this.deger = deger;
-        ChartFrame frame = new ChartFrame("Graph",grafikAyarlari());
-           
+        //ChartFrame frame = new ChartFrame("Graph",grafikAyarlari());
+        JFrame frame = new JFrame("Graph");   
+        ChartPanel chartPanel = new ChartPanel(grafikAyarlari());
+        frame.add(chartPanel);
         frame.setVisible(true);
         frame.setSize(900,900);
     }
@@ -131,11 +134,10 @@ public class GrafikCizme{
     public JFreeChart grafikAyarlari(){
       int counter = 0;
       XYSeries series = new XYSeries("sasa");
-      for(ArrayList<Double> ar: maliyetler){
-          counter++;
-          for(int i=0;i<ar.size();i++){
-              series.add(counter,(double)ar.get(i));
-          }
+      for(Double ar: maliyetler){
+                counter++;
+              series.add(counter,ar);
+         
       }
      
       XYSeriesCollection dataset = new XYSeriesCollection(series);

@@ -23,7 +23,7 @@ public class NodeUI extends JPanel {
   
   @Override
   public Dimension getPreferredSize(){
-      return new Dimension(50,50);
+      return new Dimension(35,35);
   }
 
 }
