@@ -35,7 +35,7 @@ Please let's not try impossible things :D
 ## Installation
 This min requires [Java-8 SDK](https://www.oracle.com/tr/java/technologies/javase/javase8-archive-downloads.html)
 
-![Game_Settings](/Example_Images/readmeImages/game_Settings.PNG)
+![Game_Settings](/Example_Images/readmeImages/_game_Settings.PNG)
 
 You must enter the starting and ending points of the agent precisely in terms of the numbers shown on the board but putting a wall is up to you 
 
