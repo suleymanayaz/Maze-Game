@@ -22,7 +22,7 @@ Please let's not try impossible things :D
 
 
 
-![Game_Gif](/Example_Image/readmeImages/_game_.gif)
+![Game_Gif](https://github.com/suleymanayaz/Q-Learning/blob/main/Example_Images/readmeImages/_game_.gif)
 
 
 
