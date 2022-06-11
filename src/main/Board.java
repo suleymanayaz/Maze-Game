@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import struct.*;
 import UI.*;
-import com.sun.tools.doclint.Entity;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
