@@ -35,7 +35,7 @@ Please let's not try impossible things :D
 ## Installation
 This min requires [Java-8 SDK](https://www.oracle.com/tr/java/technologies/javase/javase8-archive-downloads.html)
 
-## If you just want to play the game, you can download [Maze Game .exe](https://github.com/suleymanayaz/Q-Learning/releases/tag/v1.0.0) from realese.
+## If you just want to play the game, you can download [Maze Game.zip/tar ](https://github.com/suleymanayaz/Q-Learning/releases/tag/v1.0.0) from realese.
 
 
 ![Game_Settings](/Example_Images/readmeImages/_game_Settings.PNG)
