@@ -1,9 +1,9 @@
-# ✨  Q-Learning Game ✨
+# ✨ Maze Game ✨
 
 
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)]()
 
-✨ Q-Learning Game An agent acting with the q learning algorithm tries to reach the target by overcoming the obstacles set by the user. .✨
+✨ Maze Game An agent acting with the q learning algorithm tries to reach the target by overcoming the obstacles set by the user. .✨
 ## Project Achievements
 
 - Q-Learning Algorithm
